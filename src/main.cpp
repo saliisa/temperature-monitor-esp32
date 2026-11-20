@@ -1,21 +1,27 @@
 #include <Arduino.h>
+#include <DHT.h>
 
-// put function declarations here:
-int myFunction(int, int);
+#define DHTPIN 4
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
 
 void setup() {
   // put your setup code here, to run once:
-  //int result = myFunction(2, 3);
   Serial.begin(115200);
+  dht.begin();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  Serial.println("Hello from ESP32");
-  delay(1000);
-}
+  // put your main code here, to run repeatedly:z
+ float temp = dht.readTemperature();
+ float humidity = dht.readHumidity();
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+ if(!isnan(temp) && !isnan(humidity)){
+    Serial.printf("Temp: %.1f C | Humidity: %.1f %%\n", temp, humidity);
+ } else{
+    Serial.printf("Failed to read from DHT sensor!");
+ }
+  delay(1000);
 }
